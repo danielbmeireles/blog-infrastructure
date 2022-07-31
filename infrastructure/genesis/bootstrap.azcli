@@ -1,0 +1,55 @@
+#!/bin/bash
+
+# Important!
+# The output includes credentials that you must protect.
+# Be sure that you do not include these credentials in your code or check the credentials into your source control.
+
+set -e
+
+# Variables
+subscriptionName="Pay-As-You-Go"
+resourceGroupName="rg-blog-terraform-backend"
+storageAccountName="straccterraform$RANDOM"
+containerName="terraform-remote-state"
+servicePrincipalName="Ricky Martin"
+location="westeurope"
+
+# Set the Azure subscription
+az account set -s $subscriptionName
+
+# Get the subscription ID
+subscriptionId=$(az account show | jq -r '.id')
+
+# Create a resource group
+az group create \
+  --name $resourceGroupName \
+  --location $location
+
+# Create a service principal for a resource group using a preferred name and role
+az ad sp create-for-rbac \
+  --name $servicePrincipalName  \
+  --role owner \
+  --scopes /subscriptions/$subscriptionId/resourceGroups/$resourceGroupName
+
+# Create a storage account
+az storage account create \
+  --name $storageAccountName \
+  --resource-group $resourceGroupName \
+  --location $location \
+  --sku Standard_LRS \
+  --kind StorageV2 \
+  --output none
+
+# Retrieves and export the storage account key
+export storageAccountKey=$(az storage account keys list \
+    --resource-group $resourceGroupName \
+    --account-name $storageAccountName \
+    --query "[0].value" | tr -d '"')
+
+# Create a storage container
+az storage container create \
+    --account-name $storageAccountName \
+    --name $containerName \
+    --auth-mode key \
+    --account-key $storageAccountKey \
+    --fail-on-exist
