@@ -1,3 +1,4 @@
+<!-- BEGIN_TF_DOCS -->
 # Azure DevOps
 
 ## Description
@@ -23,6 +24,7 @@ Codebase that will deploy all the Azure DevOps-related resources used by the blo
 | Name | Type |
 |------|------|
 | [azuredevops_project.blog](https://registry.terraform.io/providers/microsoft/azuredevops/0.2.2/docs/resources/project) | resource |
+| [azuredevops_serviceendpoint_azurerm.azure](https://registry.terraform.io/providers/microsoft/azuredevops/0.2.2/docs/resources/serviceendpoint_azurerm) | resource |
 
 ## Inputs
 
@@ -45,3 +47,4 @@ Codebase that will deploy all the Azure DevOps-related resources used by the blo
 # License
 
 This code is distributed under the terms of the [MIT license](../../LICENSE).
+<!-- END_TF_DOCS -->
